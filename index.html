@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 350px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h2>Number Guessing Game</h2>
+        <p>I have picked a number between 1 and 100.</p>
+        
+        <input type="text" id="guessInput" placeholder="Enter number or 'Q' to quit" autofocus>
+        <br>
+        <button onclick="checkGuess()">Submit</button>
+
+        <div class="message" id="messageDisplay"></div>
+    </div>
+
+    <script>
+        // Generate a random number between 1 and 100
+        const target = Math.floor(Math.random() * 100) + 1;
+        let count = 1;
+
+        function checkGuess() {
+            const inputField = document.getElementById("guessInput");
+            const messageDisplay = document.getElementById("messageDisplay");
+            const n = inputField.value.trim();
+
+            // Check for Quit
+            if (n.toUpperCase() === "Q") {
+                messageDisplay.innerHTML = "Exited from the game.<br>---GAME OVER---";
+                inputField.disabled = true; // Stop playing
+                return;
+            }
+
+            // Convert input to an integer
+            const guess = parseInt(n, 10);
+
+            // Error handling for invalid inputs (similar to ValueError)
+            if (isNaN(guess)) {
+                messageDisplay.innerHTML = "Invalid input, Try again with a valid input.";
+                inputField.value = "";
+                return;
+            }
+
+            // Game Logic
+            if (guess === target) {
+                messageDisplay.innerHTML = `Target found in ${count} tries, Congratulations!<br>---GAME OVER---`;
+                messageDisplay.style.color = "green";
+                inputField.disabled = true; // Stop playing
+            } else if (guess > target) {
+                messageDisplay.innerHTML = "n is greater than target, Try again with a smaller number.";
+                count++;
+            } else {
+                messageDisplay.innerHTML = "n is less than target, Try again with a greater number.";
+                count++;
+            }
+
+            // Clear the input field for the next guess
+            inputField.value = "";
+            inputField.focus();
+        }
+
+        // Allow pressing "Enter" on the keyboard to submit
+        document.getElementById("guessInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkGuess();
+            }
+        });
+    </script>
+
+</body>
+</html>
